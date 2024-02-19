@@ -47,6 +47,6 @@ class SocialNetwork:
     def __str__(self):
         user_strings = [str(user) for user in self.users.values()]
         users_info = '\n'.join(user_strings)
-        return f"{self.name} social network:\n{users_info}"
+        return f"{self.name} social network:\n{users_info}\n"
 
 
