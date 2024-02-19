@@ -125,7 +125,7 @@ class SalePost(Post):
     def discount(self, percentage, password):
         if self.user.password == password:
             self.price *= (100 - percentage) / 100
-            print(f"Discount on {self.user.username}'s product! The new price is: {self.price}")
+            print(f"Discount on {self.user.username} product! the new price is: {self.price}")
         else:
             print("Incorrect password. Discount cannot be applied.")
 
@@ -139,4 +139,4 @@ class SalePost(Post):
     def __str__(self):
         status = "Available" if self.available else "Sold!"
         return (f"{self.user.username} posted a product for sale:\n{status} {self.product_description},"
-                f" Price: {self.price}₪, Pickup Location: {self.pickup_location}\n")
+                f" price: {self.price}, pickup from: {self.pickup_location}\n")
