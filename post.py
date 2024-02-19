@@ -25,19 +25,23 @@ class Post(Sender):
         self.post_type = post_type
 
     def like(self, user):
-        pass
+        if user.logged_in is False:
+            raise PermissionError("User is not logged in.")
+        if user != self.user:
+            print(f"notification to {self.user.username}: {user.username} liked your post")
+            Sender.notify(user, self.user, "like")
+        return True
 
     def comment(self, user, comment):
-        pass
+        if user.logged_in is False:
+            raise PermissionError("User is not logged in.")
+        if user != self.user:
+            print(f"notification to {self.user.username}: {user.username} commented on your post: {comment}")
+            Sender.notify(user, self.user, "comment")
+        return True
 
     def __str__(self):
         pass
-
-    def notify(self, user, flag):
-        if flag == "like":
-            self.user.update(f"{user.username} liked your post")
-        if flag == "comment":
-            self.user.update(f"{user.username} commented on your post")
 
 
 class TextPost(Post):
@@ -45,21 +49,6 @@ class TextPost(Post):
         # Initialize a new text post.
         super().__init__(user, "Text")
         self.content = content
-
-    def like(self, user):
-        if user != self.user:
-            print(f"notification to {self.user.username}: {user.username} liked your post")
-            self.notify(user, "like")
-            # self.user.update(f"{user.username} liked your post")
-            return True
-        return False
-
-    def comment(self, user, comment):
-        if user != self.user:
-            print(f"notification to {self.user.username}: {user.username} commented on your post: {comment}")
-            self.notify(user, "comment")
-            return True
-        return False
 
     def __str__(self):
         return f'{self.user.username} published a post:\n"{self.content}"\n'
@@ -70,20 +59,6 @@ class ImagePost(Post):
         # Initialize a new image post.
         super().__init__(user, "Image")
         self.image_path = image_path
-
-    def like(self, user):
-        if user != self.user:
-            print(f"notification to {self.user.username}: {user.username} liked your post")
-            self.notify(user, "like")
-            return True
-        return False
-
-    def comment(self, user, comment):
-        if user != self.user:
-            print(f"notification to {self.user.username}: {user.username} commented on your post: {comment}")
-            self.notify(user, "comment")
-            return True
-        return False
 
     def display(self):
         try:
@@ -108,21 +83,9 @@ class SalePost(Post):
         self.pickup_location = pickup_location
         self.available = True
 
-    def like(self, user):
-        if user != self.user:
-            print(f"notification to {self.user.username}: {user.username} liked your post")
-            self.notify(user, "like")
-            return True
-        return False
-
-    def comment(self, user, comment):
-        if user != self.user:
-            print(f"notification to {self.user.username}: {user.username} commented on your post: {comment}")
-            self.notify(user, "comment")
-            return True
-        return False
-
     def discount(self, percentage, password):
+        if self.user.logged_in is False:
+            raise PermissionError("User is not logged in.")
         if self.user.password == password:
             self.price *= (100 - percentage) / 100
             print(f"Discount on {self.user.username} product! the new price is: {self.price}")
@@ -130,6 +93,8 @@ class SalePost(Post):
             print("Incorrect password. Discount cannot be applied.")
 
     def sold(self, password):
+        if self.user.logged_in is False:
+            raise PermissionError("User is not logged in.")
         if self.user.password == password:
             self.available = False
             print(f"{self.user.username}'s product is sold")
@@ -137,6 +102,6 @@ class SalePost(Post):
             print("Incorrect password. Product cannot be marked as sold.")
 
     def __str__(self):
-        status = "Available" if self.available else "Sold!"
+        status = "For sale!" if self.available else "Sold!"
         return (f"{self.user.username} posted a product for sale:\n{status} {self.product_description},"
                 f" price: {self.price}, pickup from: {self.pickup_location}\n")

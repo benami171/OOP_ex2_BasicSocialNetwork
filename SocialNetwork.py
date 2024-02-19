@@ -1,19 +1,20 @@
-# this class represent a social network with users and posts
-# the design patt used here is the singleton pattern
-# the class has a private constructor and a static method to get the instance of socialNetwork
-# the class has sign up method to create a new user
-# the class has log in and log out methods to log in and log out a user
 from user import User
 
 
 class SocialNetwork:
     __instance = None  # Class variable to store the single instance
-
+    """ This method is called before __init__ when an object is created.
+        The Singleton pattern ensures that only one instance of the SocialNetwork class exists.
+        If an instance already exists, it returns that instance. If not, it creates a new one.
+        """
     def __new__(cls, *args, **kwargs):
         if cls.__instance is None:
             cls.__instance = super(SocialNetwork, cls).__new__(cls)
         return cls.__instance
 
+    """ The name of the social network will be set only once,
+        when the first instance of the class is created, 
+        so if someone tries to create a new instance we check if the name is already set"""
     def __init__(self, name=""):
         if not hasattr(self, 'name'):
             self.name = name
@@ -23,7 +24,7 @@ class SocialNetwork:
     def sign_up(self, username, password):
         # Create a new user and add to the network.
         if username in self.users:
-            return None  # User already exists
+            raise ValueError("Username already exists")
         user = User(username, password)
         self.users[username] = user
         return user

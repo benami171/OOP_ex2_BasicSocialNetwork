@@ -1,23 +1,15 @@
-from abc import ABC, abstractmethod
+class Sender:
+    @staticmethod
+    def notify(user, recipient, flag):
+        if flag == "like":
+            recipient.update(f"{user.username} liked your post")
+        if flag == "comment":
+            recipient.update(f"{user.username} commented on your post")
 
 
-class Sender(ABC):
-    @abstractmethod
-    def notify(self, message, user):
-        pass
+class Member:
+    def __init__(self):
+        self.notifications = []
 
-
-class Member(ABC):
-    @abstractmethod
     def update(self, message):
-        pass
-
-
-
-
-
-
-
-
-
-
+        self.notifications.append(message)
