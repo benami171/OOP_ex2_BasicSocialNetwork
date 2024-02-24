@@ -25,6 +25,8 @@ class SocialNetwork:
         # Create a new user and add to the network.
         if username in self.users:
             raise ValueError("Username already exists")
+        if len(password) < 4 or len(password) > 8:
+            raise ValueError("Username must be 4-8 characters long")
         user = User(username, password)
         self.users[username] = user
         return user
