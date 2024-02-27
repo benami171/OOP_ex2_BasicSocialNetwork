@@ -1,6 +1,5 @@
 class Sender:
-    @staticmethod
-    def notify(user, recipient, flag):
+    def notify(self,user, recipient, flag):
         if flag == "like":
             recipient.update(f"{user.username} liked your post")
         if flag == "comment":

@@ -5,16 +5,18 @@ from Observer import Member
 class User(Member):
     def __init__(self, username, password):
         super().__init__()
-        # Initialize a new user.
+        # Initialize a new user. 
         self.number_of_posts = 0
         self.number_of_followers = 0
         self.username = username
         self.password = password
-        self.logged_in = True
+        self.logged_in = True # New users are logged in by default.
         self.followers = set()
         self.following = set()
         self.notifications = []
-
+    
+    # Follow a user, if the user is not logged in or trying to follow himself, raise an exception.
+    # Add the user to the following set and add the current user to the followers set of the user.
     def follow(self, user):
         if user.logged_in is False or user == self:
             raise PermissionError("User is not logged in or trying to follow himself.")
@@ -24,6 +26,8 @@ class User(Member):
             user.number_of_followers += 1
             print(f"{self.username} started following {user.username}")
 
+    # Unfollow a user, if the user is not logged in or trying to unfollow himself, raise an exception.
+    # Remove the user from the following set and remove the current user from the followers set of the user.
     def unfollow(self, user):
         if self.logged_in is False or user == self:
             raise PermissionError("User is not logged in or trying to unfollow himself.")
@@ -34,6 +38,7 @@ class User(Member):
                 user.number_of_followers -= 1
             print(f"{self.username} unfollowed {user.username}")
 
+    # After posting, notify all followers of the user about the new post.
     def publish_post(self, post_type, *args, **kwargs):
         if self.logged_in is False:
             raise PermissionError("User is not logged in.")

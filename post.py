@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from Observer import Sender
 
+# Factory method to create different types of posts.
 
 class PostFactory:
     @staticmethod
@@ -16,7 +17,8 @@ class PostFactory:
         else:
             raise ValueError("Invalid post type")
 
-
+# Abstract class for different types of posts.
+# The class inherits from the Sender class, which is an observer pattern.
 class Post(Sender):
     def __init__(self, user, post_type, *args, **kwargs):
         # Initialize a new post.
@@ -29,7 +31,7 @@ class Post(Sender):
             raise PermissionError("User is not logged in.")
         if user != self.user:
             print(f"notification to {self.user.username}: {user.username} liked your post")
-            Sender.notify(user, self.user, "like")
+            self.notify(user, self.user, "like")
         return True
 
     def comment(self, user, comment):
@@ -37,12 +39,13 @@ class Post(Sender):
             raise PermissionError("User is not logged in.")
         if user != self.user:
             print(f"notification to {self.user.username}: {user.username} commented on your post: {comment}")
-            Sender.notify(user, self.user, "comment")
+            self.notify(user, self.user, "comment")
         return True
 
     def __str__(self):
         pass
 
+# All the different types of posts inherit from the Post class.
 
 class TextPost(Post):
     def __init__(self, user, content):
